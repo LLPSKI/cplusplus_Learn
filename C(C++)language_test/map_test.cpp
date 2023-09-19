@@ -1,0 +1,65 @@
+#include<iostream>
+#include<map>
+using namespace std;
+template<typename T>
+bool comp1(const T& x,const T& y)
+{
+	return x>y;
+}
+struct comp2
+{
+	template<typename T>
+	bool operator()(const T& x,const T& y) const
+	{
+		return x>y;
+	}
+};
+int main(void)
+{
+//???? 
+	//??? 
+	map<char,int> mp1;
+	//??????庯???????????? 
+	map<char,int> mp1_2(comp2);
+	//range
+	map<char,int> mp2(mp1.begin(),mp1.end());
+	//	int* arr = new int[10];
+	//	map<char,int> mp2_arr(arr,arr+10);?????????
+	//copy
+	map<char,int> mp3(mp2);
+	//assign
+	map<char,int> mp4 = mp3;
+	//list
+	map<char,int> mp5 = {{'a',10},{'b',20},{'c',30}};
+
+//????
+	cout<<mp5.size()<<'\n';
+	cout<<mp5.max_size()<<'\n';
+	cout<<mp5.empty()<<'\n'; 
+
+//???????
+	mp1['a'] = 1; 
+	//	mp1.at('b') = 10;????????????????? 你好
+	
+	//insert
+	pair<map<char,int>::iterator,bool> pr1 = mp1.insert(pair<char,int>('b',10));
+	//???????????????????bool?ж????????? 
+	//?????λ?ò???о????????????????
+	mp1.insert(mp5.begin(),mp5.end());
+	for(auto& x:mp1)
+	{
+		cout<<x.first<<"=>"<<x.second<<'\n';
+	} 
+	
+//??????
+	cout<<mp1['a']<<'\n'; 
+	//	cout<<mp1['b']<<'\n';?????? 
+	cout<<mp1.at('a')<<'\n'; 
+	map<char,int>::iterator it = mp1.begin();
+	cout<<it->first<<'\n';
+	cout<<it->second<<'\n';
+	//find
+	it = mp1.find('c');
+	cout<<it->second<<'\n';
+	return 0;
+}

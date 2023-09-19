@@ -1,0 +1,30 @@
+#ifndef TEST_HPP
+#define TEST_HPP
+//判断记录是否有序
+template<typename T,typename compare=less<T>>
+bool is_correct(T* arr,int n,const compare& comp=compare())
+{
+    for(int i=1;i<n;i++)
+    {
+        if((comp(arr[i],arr[i-1])))
+        {
+            //less情况：后面小于前面则不是升序
+            //greater情况：后面大于前面则不是降序
+            return false;
+        }
+    }
+    return true;
+}
+//重新加载记录内容
+template<typename T>
+void upload(T* arr,int n)
+{
+    srand(time(NULL));
+    for(int i=0;i<n;i++)
+    {
+        arr[i]=rand();
+    }
+    cout<<"加载序列完毕！\n";
+}
+
+#endif 

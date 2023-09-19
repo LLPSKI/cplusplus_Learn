@@ -1,0 +1,9 @@
+#ifndef HEAP_IMPL
+#define HEAP_IMPL
+template<typename T,typename compare>
+class heap
+{
+    
+};
+
+#endif
