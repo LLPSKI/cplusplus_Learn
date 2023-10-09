@@ -9,7 +9,8 @@
                 "D:/Environment/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include/c++/backward",
                 "D:/Environment/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include",
                 "D:/Environment/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/include-fixed",
-                "D:/Environment/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/../../../../x86_64-w64-mingw32/include"
+                "D:/Environment/mingw64/bin/../lib/gcc/x86_64-w64-mingw32/8.1.0/../../../../x86_64-w64-mingw32/include",
+                "${workspaceFolder}/data_structure_impl"
             ],
             "defines": [
                 "_DEBUG",
