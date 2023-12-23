@@ -1,0 +1,431 @@
+#ifndef RBT_impl
+#define RBT_impl
+#include<iostream>
+#include"BST_impl"
+#include"Base_Node"
+using namespace std;
+
+
+enum Color
+{
+    Red,
+    Black
+};
+template<typename Key_type,typename Value_type>
+struct RBT_Node : public Base_Node<Key_type,Value_type>
+{
+    //类型定义
+    typedef RBT_Node* PNode_type;
+
+    //成员变量
+    Color color;
+    PNode_type l,r,p;
+
+    /*
+        构造函数
+        功能：将成员变量key赋值，p l r 指针设置为NULL，color默认设置为Red
+    */
+    RBT_Node(Key_type key);
+};
+
+template<typename Key_type,typename Value_type>
+RBT_Node<Key_type,Value_type>::RBT_Node(Key_type key)
+{
+    this->color = Red;
+    this->key = key;
+    this->l = NULL;
+    this->p = NULL;
+    this->r = NULL;
+}
+
+template<typename Key_type,typename Value_type,typename Node_type = RBT_Node<Key_type,Value_type>>
+struct RBT : public BST<Key_type,Value_type,Node_type>
+{
+    //类型定义
+    typedef Node_type* PNode_type;
+    typedef Node_type* iterator;
+
+    //成员变量
+    // PNode_type T;
+
+    /*
+        功能：红黑树中序遍历
+        实现方式：递归
+        传参：本次递归处理的结点地址，以及相应的层数
+        返回值：无
+    */
+    void In_Order_Traversal(PNode_type t,int current_layer);
+
+    /*
+        红黑树新增操作：左旋
+        Left_Rotate
+        功能：将结点x实现左旋
+        传参：结点x的地址
+        返回值：成功返回true，失败返回false
+    */
+    bool Left_Rotate(PNode_type x);
+
+    /*
+        红黑树新增操作：右旋
+        Right_Rotate
+        功能：将结点x实现右旋
+        传参：结点x的地址
+        返回值：成功返回true，失败返回false
+    */
+    bool Right_Rotate(PNode_type x);
+
+    /*
+        红黑树改进操作：插入
+        Insert
+        功能：先将关键字key创建一个结点z，再将结点z插入到红黑树中且维护红黑性质不变
+        传参：关键字key
+        返回值：结点z的地址，如果为NULL，则表示插入失败
+    */
+    PNode_type Insert(Key_type key);
+
+    /*
+        红黑树插入时维护红黑性质不变
+        RB_Insert_Fixup
+        功能：在Insert操作最后调用该函数，维护树中红黑性质不变
+        传参：可能违反红黑性质的结点z的地址
+        返回值：无
+    */
+    void RB_Insert_Fixup(PNode_type z);
+
+    /*
+        红黑树改进操作：删除
+        Delete
+        功能：将结点z从红黑树中删除且维护红黑性质不变
+        传参：结点z的地址
+        返回值：删除成功返回true，反之返回false
+    */
+    bool Delete(PNode_type z);
+
+    /*
+        红黑树删除时维护红黑性质不变
+        RB_Delete_Fixup
+        功能：在Delete操作最后调用该函数，维护树中红黑性质不变
+        传参：可能违反红黑性质的结点x的地址
+        返回值：无
+    */
+    void RB_Delete_Fixup(PNode_type x);
+
+    /*
+        RBT_BH
+        功能：返回红黑树的黑高，并同时检验是否满足红黑性质
+        实现方式：递归实现
+        传参：本次递归调用时需要处理的结点t
+        返回值：红黑树的黑高，如果违反红黑性质则返回-1
+    */
+    int RBT_BH(PNode_type t);
+};
+
+template<typename Key_type,typename Value_type,typename Node_type>
+void RBT<Key_type,Value_type,Node_type>::In_Order_Traversal(PNode_type t,int current_layer)
+{
+    while(t)
+    {
+        In_Order_Traversal(t->l,current_layer + 1);
+        cout<<current_layer<<"层 key = "<<t->key<<" color = "<<(t->color == Red ? "Red" : "Black")<<'\n';
+        In_Order_Traversal(t->r, current_layer + 1);
+        return ;
+    }
+}
+
+template<typename Key_type,typename Value_type,typename Node_type>
+bool RBT<Key_type,Value_type,Node_type>::Left_Rotate(PNode_type x)
+{
+    if(x)
+    {
+        PNode_type y = x->r;
+        if(y)
+        {
+            x->r = y->l;
+            if(y->l)
+            {
+                y->l->p = x;
+            }
+            y->p = x->p;
+            if(x->p == NULL)
+            {
+                this->T = y;
+            }
+            else if(x->p->l == x)
+            {
+                x->p->l = y;
+            }
+            else if(x->p->r == x)
+            {
+                x->p->r = y;
+            }
+            y->l = x;
+            x->p = y;
+            return true;
+        }
+        return false;
+    }
+    return false;
+}
+
+template<typename Key_type,typename Value_type,typename Node_type>
+bool RBT<Key_type,Value_type,Node_type>::Right_Rotate(PNode_type x)
+{
+    if(x)
+    {
+        PNode_type y = x->l;
+        if(y)
+        {
+            x->l = y->r;
+            if(y->r)
+            {
+                y->r->p = x;
+            }
+            y->p = x->p;
+            if(x->p == NULL)
+            {
+                this->T = y;
+            }
+            else if(x->p->l == x)
+            {
+                x->p->l = y;
+            }
+            else if(x->p->r == x)
+            {
+                x->p->r = y;
+            }
+            y->r = x;
+            x->p = y;
+            return true;
+        }
+        return false;
+    }
+    return false;
+}
+
+template<typename Key_type,typename Value_type,typename Node_type>
+typename RBT<Key_type,Value_type,Node_type>::PNode_type RBT<Key_type,Value_type,Node_type>::Insert(Key_type key)
+{
+    PNode_type z = new Node_type(key);
+    PNode_type x = this->T;
+    PNode_type y = NULL;
+    while(x)
+    {
+        y = x;
+        if(z->key < x->key)
+        {
+            x = x->l;
+        }
+        else 
+        {
+            x = x->r;
+        }
+    }
+    z->p = y;
+    if(y == NULL)
+    {
+        this->T = z;
+    }
+    else if(z->key < y->key)
+    {
+        y->l = z;
+    }
+    else
+    {
+        y->r = z;
+    }
+    this->Node_Number++;
+    //默认的时候结点就是红色
+    this->RB_Insert_Fixup(z);
+    return z;
+}
+
+template<typename Key_type,typename Value_type,typename Node_type>
+void RBT<Key_type,Value_type,Node_type>::RB_Insert_Fixup(PNode_type z)
+{
+    while(z->p != NULL && z->p->color == Red)
+    {
+        if(z->p == z->p->p->l)
+        {
+            PNode_type y = z->p->p->r;
+            if(y == NULL || y->color == Black)
+            {
+                if(z == z->p->r)
+                {
+                    z = z->p;
+                    this->Left_Rotate(z);
+                }
+                z->p->color = Black;
+                z->p->p->color = Red;
+                this->Right_Rotate(z->p->p);
+            }
+            else 
+            {
+                z->p->color = Black;
+                y->color = Black;
+                z->p->p->color = Red;
+                z = z->p->p;
+            }
+        }
+        else if(z->p == z->p->p->r)
+        {
+            PNode_type y = z->p->p->l;
+            if(y == NULL || y->color == Black)
+            {
+                if(z == z->p->l)
+                {
+                    z = z->p;
+                    this->Right_Rotate(z);
+                }
+                z->p->color = Black;
+                z->p->p->color = Red;
+                this->Left_Rotate(z->p->p);
+            }
+            else 
+            {
+                z->p->color = Black;
+                y->color = Black;
+                z->p->p->color = Red;
+                z = z->p->p;
+            }
+        }
+    }
+    this->T->color = Black;
+    return ;
+}
+
+template<typename Key_type,typename Value_type,typename Node_type>
+bool RBT<Key_type,Value_type,Node_type>::Delete(PNode_type z)
+{
+    if(z != NULL)
+    {
+        PNode_type y = z;//y是真正要删除的结点
+        Color original_color = y->color;
+        PNode_type x;
+        if(z->l == NULL)
+        {
+            x = z->r;
+            this->Transplant(z,z->r);
+            delete z;
+        }
+        else if(z->r == NULL)
+        {
+            x = z->l;
+            this->Transplant(z,z->l);
+            delete z;
+        }
+        else 
+        {
+            //进入此情况下，必然有后继
+            y = this->Successor(z);
+            original_color = y->color;
+            x = y->r;
+            if(y->p != z)
+            {
+                this->Transplant(y,y->r);
+                y->r = z->r;
+                y->r->p = y;
+            }
+            this->Transplant(z,y);
+            y->l = z->l;
+            y->l->p = y;
+            y->color = z->color;
+            delete z;
+            if(original_color == Black)
+            {
+                this->RB_Delete_Fixup(x);
+            }
+        }
+        this->Node_Number--;
+        return true;
+    }
+    return false;
+}
+
+template<typename Key_type,typename Value_type,typename Node_type>
+void RBT<Key_type,Value_type,Node_type>::RB_Delete_Fixup(PNode_type x)
+{
+    while(x != this->T && x == NULL || x->color == Black)
+    {
+        if(x == x->p->l)
+        {
+            PNode_type w = x->p->r;
+            if(w != NULL && w->color == Red)
+            {
+                w->color = Black;
+                x->p->color = Red;
+                this->Left_Rotate(x->p);
+                w = x->p->r;
+            }
+            if(w == NULL || w->color == Black && (w->l == NULL || w->l->color == Black)
+                                              && (w->r == NULL || w->r->color == Black))
+            {
+                w->color = Red;
+                x = x->p;
+            }
+            else if(w->r != NULL && w->r->color == Black)
+            {
+                w->l->color = Black;
+                w->color = Red;
+                this->Right_Rotate(w);
+                w = x->p->r;
+
+                w->color = x->p->color;
+                x->p->color = Black;
+                w->r->color = Black;
+                this->Left_Rotate(x->p);
+                x = this->T;
+            }
+        }
+        else if(x == x->p->r)
+        {
+            PNode_type w = x->p->l;
+            if(w != NULL && w->color == Red)
+            {
+                w->color = Black;
+                x->p->color = Red;
+                this->Right_Rotate(x->p);
+                w = x->p->l;
+            }
+            if(w == NULL || w->color == Black && (w->l == NULL || w->l->color == Black)
+                                              && (w->r == NULL || w->r->color == Black))
+            {
+                w->color = Red;
+                x = x->p;
+            }
+            else if(w->l != NULL && w->l->color == Black)
+            {
+                w->r->color = Black;
+                w->color = Red;
+                this->Left_Rotate(w);
+                w = x->p->l;
+
+                w->color = x->p->color;
+                x->p->color = Black;
+                w->l->color = Black;
+                this->Right_Rotate(x->p);
+                x = this->T;
+            }
+        }
+    }   
+    x->color = Black;
+}
+
+template<typename Key_type,typename Value_type,typename Node_type>
+int RBT<Key_type,Value_type,Node_type>::RBT_BH(PNode_type t)
+{
+    if(t == NULL)
+    {
+        return 0;
+    }
+    int r_hight = this->RBT_BH(t->r);
+    int l_hight = this->RBT_BH(t->l);
+    if(t->color == Black)
+    {
+        return r_hight == l_hight ? r_hight + 1 : -1;
+    }
+    if(t->color == Red)
+    {
+        return r_hight == l_hight ? RBT_BH(t->r) : -1;
+    }
+}
+#endif

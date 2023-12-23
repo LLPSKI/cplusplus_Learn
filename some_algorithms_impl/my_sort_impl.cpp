@@ -5,38 +5,13 @@
 using namespace std;
 #include"test"
 #include"../data_structure_impl/heap_impl"
-/*
-插入排序算法
-算法思想：
-    让一个序列从第一个开始一点一点有序，每次将有序最外面的那个元素插入到有序序列中的相应位置，同时保证有序序列仍然有序，
-直到整个序列有序。
-时间复杂度：
-    狗都不用，最好情况O(n)，而且概率极低，平均和最坏情况都是O(n^2)，基本上没法用。
-*/
-template<typename T,typename compare=less<T>>
-void insert_sort(T*& arr,size_t n,const compare& comp=compare())
-{
-    for(int i=1;i<n;i++)
-    {
-        int temp=arr[i];
-        for(int j=i-1;j>=0;j--)
-        {
-            if(comp(temp,arr[j]))
-            {
-                arr[j+1]=arr[j];
-                continue;
-            }
-            arr[j+1]=temp;
-            break;
-        }
-    }
-}
+
 template<typename T>
-struct bucrangeet_node
+struct bucket_node
 {
     T value;
-    bucrangeet_node<T>* next;
-    ~bucrangeet_node()
+    bucket_node<T>* next;
+    ~bucket_node()
     {
         if(this->next!=NULL)
         {
@@ -45,7 +20,7 @@ struct bucrangeet_node
     }
 };
 template<typename T,typename compare=less<T>>
-void insert_sort(bucrangeet_node<T>* b,T& value,const compare& comp=compare())
+void insert_sort(bucket_node<T>* b,T& value,const compare& comp=compare())
 {
     if(b->next!=NULL)
     {
@@ -57,14 +32,14 @@ void insert_sort(bucrangeet_node<T>* b,T& value,const compare& comp=compare())
                 break;
             }
         }
-        bucrangeet_node<T>* new_node=new bucrangeet_node<T>();
+        bucket_node<T>* new_node=new bucket_node<T>();
         new_node->next=b->next;
         b->next=new_node;
         new_node->value=value;
         new_node->next=NULL;
         return ;
     }
-    b->next=new bucrangeet_node<T>();
+    b->next=new bucket_node<T>();
     b->next->value=value;
     b->next->next=NULL;
 }
@@ -163,13 +138,13 @@ int partition(T*& arr,int low,int high,const compare& comp=compare())
 	return i;
 }
 template<typename T,typename compare=less<T>>
-void quicrange_sort(T*& arr,int low,int high,const compare& comp=compare())
+void quick_sort(T*& arr,int low,int high,const compare& comp=compare())
 {
 	if(low<high)
 	{
 		int i=partition(arr,low,high,comp);
-		quicrange_sort(arr,low,i-1,comp);
-		quicrange_sort(arr,i+1,high,comp);
+		quick_sort(arr,low,i-1,comp);
+		quick_sort(arr,i+1,high,comp);
 	}
 }
 /*

@@ -1,0 +1,48 @@
+#ifndef HEAP_IMPL
+#define HEAP_IMPL
+template<typename T,typename compare=greater<T>>//默认是大根堆
+struct heap
+{
+    typedef T value_type;
+
+    static size_t left(size_t i)
+    {
+        return 2*i+1;
+    }
+    static size_t right(size_t i)
+    {
+        return 2*(i+1);
+    }
+    static size_t parent(size_t i)
+    {
+        return (i-1)/2;
+    }
+    static void heapify(value_type*& arr,size_t i,size_t n,const compare& comp=compare())
+    {
+        size_t l=left(i);
+        size_t r=right(i);
+        size_t changed;
+        if(l<n&&comp(arr[l],arr[i]))
+        {
+            changed=l;
+        }else changed=i;
+        if(r<n&&comp(arr[r],arr[changed]))
+        {
+            changed=r;
+        }
+        if(changed!=i)
+        {
+            swap(arr[i],arr[changed]);
+            heapify(arr,changed,n);
+        }
+    }
+    static void build_heap(value_type*& arr,size_t n,const compare& comp=compare())
+    {
+        for(int i=n/2;i>=0;i--)
+        {
+            heapify(arr,i,n,comp);
+        }
+    }
+};
+
+#endif

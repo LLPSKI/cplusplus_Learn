@@ -1,0 +1,33 @@
+#ifndef INSERT_SORT_IMPL
+#define INSERT_SORT_IMPL
+#include<functional>
+using namespace std;
+/*
+插入排序算法
+算法思想：
+    让一个序列从第一个开始一点一点有序，每次将有序最外面的那个元素插入到有序序列中的相应位置，同时保证有序序列仍然有序，
+直到整个序列有序。
+时间复杂度：
+    狗都不用，最好情况O(n)，而且概率极低，平均和最坏情况都是O(n^2)，基本上没法用。
+*/
+template<typename T,typename compare = less<T>>
+void insert_sort(T*& arr,unsigned int n,const compare& comp = compare())
+{
+    for(int i = 1;i < n;i++)
+    {
+        int temp = arr[i];
+        int j;
+        for(j = i - 1;j >= 0;j--)
+        {
+            if(comp(temp,arr[j]))
+            {
+                arr[j+1] = arr[j];
+                continue;
+            }
+            break;
+        }
+        arr[j+1] = temp;
+    }
+}
+
+#endif

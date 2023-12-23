@@ -1,0 +1,42 @@
+#ifndef COUNTING_SORT_IMPL
+#define COUNTING_SORT_IMPL
+#include<functional>
+#include<cstring>
+using namespace std;
+/*
+计数排序算法
+主要算法思想：
+    对于每一个元素x，记录比它大或小的元素个数，对应的便可以将其放在数组相应位置
+时间复杂度：
+    Θ(range+n)
+缺点：
+    一般来说，元素的范围很难确定，普遍已知的是元素的个数；如果元素的个数远大于元素本身的范围，那么算法会很优，但如果
+元素的个数远小于元素本身的范围，那么会导致count数组很大，影响时间和空间复杂度；所以存在一定的限制
+*/
+template<typename T>
+void counting_sort_less(T*& arr,size_t n,size_t range=RAND_MAX+1)//千万注意：range是个闭区间
+{
+    T* count=new T[range];
+    memset(count,0,sizeof(T)*range);//将count数组初始化为0
+    for(int i=0;i<n;i++)
+    {
+        count[arr[i]]++;//记录元素个数
+    }
+    for(int i=1;i<range;i++)
+    {
+        count[i]+=count[i-1];//记录小于该元素的格式
+    }
+    T* temp=new T[n];
+    for(int i=n-1;i>=0;i--)
+    {
+        temp[count[arr[i]]-1]=arr[i];//将对应元素放在相应的位置，-1是数组下标以0开始
+        count[arr[i]]--;//支持元素相异
+    }
+    for(int i=0;i<n;i++)
+    {
+        arr[i]=temp[i];//将数据写回原数组
+    }
+    delete[] temp,count;
+}
+
+#endif

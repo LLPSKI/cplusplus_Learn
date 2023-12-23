@@ -1,0 +1,15 @@
+#ifndef BASE_NODE
+#define BASE_NODE
+template<typename Key_type,typename Value_type>
+struct Base_Node
+{
+    //类型定义
+    typedef Value_type* PValue_type;
+
+    //成员变量
+    Key_type key;
+    PValue_type value;
+};
+
+
+#endif

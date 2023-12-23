@@ -1,0 +1,37 @@
+#ifndef QUICK_SORT_IMPL
+#define QUICK_SORT_IMPL
+#include<functional>
+using namespace std;
+/*
+快速排序
+算法思想：
+	冒泡排序中每次交换只会消除一个逆序序列，而快速排序则可以一次交换消除多个逆序系列；每一趟排序都将序列分为两部分，一部
+分小于中间值的放左边，另一部分放右边，最后再递归处理左子序列和右子序列；
+*/
+template<typename T,typename compare=less<T>>
+int partition(T*& arr,int low,int high,const compare& comp=compare())
+{
+	int i=low;
+	int temp=arr[high];
+	for(int j=low;j<=high;j++)
+	{
+		if(comp(arr[j],temp))
+		{
+			swap(arr[j],arr[i]);
+			i++;
+		}
+	}
+	swap(arr[i],arr[high]);
+	return i;
+}
+template<typename T,typename compare=less<T>>
+void quick_sort(T*& arr,int low,int high,const compare& comp=compare())
+{
+	if(low<high)
+	{
+		int i=partition(arr,low,high,comp);
+		quick_sort(arr,low,i-1,comp);
+		quick_sort(arr,i+1,high,comp);
+	}
+}
+#endif

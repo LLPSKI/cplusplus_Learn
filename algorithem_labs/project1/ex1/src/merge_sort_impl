@@ -1,0 +1,47 @@
+#ifndef MERGE_SORT_IMPL
+#define MERGE_SORT_IMPL
+#include<functional>
+using namespace std;
+/*
+归并排序算法
+算法思想：
+    分治法，排序一段序列等于排序左边序列和右边序列，然后将两个子序列合并。
+时间复杂度：
+    O(nlgn)，算比较可以的。
+*/
+template<typename T,typename compare=less<T>>
+void merge(T*& arr,size_t low,size_t mid,size_t high,const compare& comp=compare())
+{
+	int i=low,j=mid+1,range=0;
+	int *temp=new int[high-low+1];
+	while(i<=mid&&j<=high)
+	{
+		if(comp(arr[i],arr[j]))
+		{
+			temp[range++]=arr[i++];
+		}else 
+		{
+			temp[range++]=arr[j++];
+		}
+	}
+	while(i<=mid) temp[range++]=arr[i++];
+	while(j<=high) temp[range++]=arr[j++];
+	for(int l=0;l<range;l++)
+	{
+		arr[l+low]=temp[l];
+	}
+    delete[] temp;
+}
+template<typename T,typename compare=less<T>>
+void merge_sort(T*& arr,size_t low,size_t high,const compare& comp=compare())
+{
+	if(low<high)
+	{
+		int mid=(low+high)/2;
+		merge_sort(arr,low,mid,comp);
+		merge_sort(arr,mid+1,high,comp);
+		merge(arr,low,mid,high,comp);
+	}
+}
+
+#endif

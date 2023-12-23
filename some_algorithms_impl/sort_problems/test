@@ -1,8 +1,11 @@
 #ifndef TEST_HPP
 #define TEST_HPP
-//判断记录是否有序
-template<typename T,typename compare=less_equal<T>>
-bool is_correct(T*& arr,size_t n,const compare& comp=compare())
+#include<ctime>
+/*
+    函数功能：判断记录是否“有序”
+*/
+template<typename T,typename length_type = unsigned int,typename compare=less_equal<T>>
+bool is_correct(T*& arr,length_type n,const compare& comp=compare())
 {
     for(int i=0;i<n-1;i++)
     {
@@ -17,8 +20,8 @@ bool is_correct(T*& arr,size_t n,const compare& comp=compare())
     return true;
 }
 //重新加载记录内容
-template<typename T>
-void upload(T*& arr,size_t n)
+template<typename T,typename length_type = unsigned int>
+void upload(T*& arr,length_type n)
 {
     srand(time(NULL));
     for(int i=0;i<n;i++)
