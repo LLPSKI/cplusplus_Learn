@@ -1,0 +1,86 @@
+#ifndef BST_NODE
+#define BST_NODE
+#include<iostream>
+#include"Base_Node"
+using namespace std;
+
+/*
+    数据结构：基本二叉搜索树BST结点类型
+    继承：继承自基础结点类
+    成员变量：
+        1.键值key（继承）
+        2.指向数据域的指针value（继承）
+        3.指向自身类型的三个指针l r p，分别表示左孩子、右孩子和父亲指针（新增）
+    实现功能：
+        1.构造函数（修改）
+        2.析构函数（修改）
+        3.展示结点键值信息（继承）
+*/
+template<typename Key_type, typename Value_type>
+struct BST_Node : public Base_Node<Key_type, Value_type>
+{
+    //类型定义
+    typedef BST_Node<Key_type, Value_type>* PNode_type;
+    typedef Value_type* PValue_type;
+
+    //成员变量
+    PNode_type p,l,r;
+
+    //成员函数
+    /*
+        函数名称：无
+        类型：构造函数
+        传参：无
+        返回值：无
+        功能1：键值设为0，数据域指针指向NULL
+        功能2：键值传进来，数据域指针默认为NULL
+    */
+    BST_Node();
+    BST_Node(Key_type key, PValue_type value = NULL);
+
+    /*
+        函数名称：无
+        类型：析构函数
+        传参：无
+        返回值：无
+        功能：调用基类的析构函数并同时释放掉自身三个指针指向的结点空间，也就是这棵树释放掉
+    */
+    ~BST_Node();
+
+    
+};
+template<typename Key_type, typename Value_type>
+BST_Node<Key_type, Value_type>::BST_Node()
+{
+    //此处默认调用Base_Node的默认构造函数
+    this->l = NULL;
+    this->p = NULL;
+    this->r = NULL;
+    cout << "指针属性初始化！\n";
+}
+
+template<typename Key_type, typename Value_type>
+BST_Node<Key_type, Value_type>::BST_Node(Key_type key, PValue_type value) 
+: Base_Node<Key_type, Value_type>(key, value)
+{
+    //此处显式调用Base_Node的默认构造函数1
+    this->l = NULL;
+    this->p = NULL;
+    this->r = NULL;
+    cout << "指针属性初始化！\n";
+}
+
+template<typename Key_type, typename Value_type>
+BST_Node<Key_type, Value_type>::~BST_Node()
+{
+    //此处会默认调用Base_Node的默认析构函数
+    if(this->l != NULL)
+    {
+        delete this->l;
+    }
+    if(this->r != NULL)
+    {
+        delete this->r;
+    }
+}
+#endif

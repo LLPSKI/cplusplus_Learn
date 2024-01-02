@@ -1,37 +1,27 @@
 #ifndef BST_IMPL
 #define BST_IMPL
 #include<iostream>
-#include"Base_Node"
+#include"BST_Node"
 using namespace std;
+
 /*
-    基本二叉搜索树实现
+    数据结构：BST二叉搜索树
+    继承：基类
+    成员变量：
+        1.Node_Number记录当前搜索树中结点的个数
+        2.T为指向树的根节点的指针
+    成员函数：
+        1.构造函数
+        2.析构函数
+        3.对树的中序遍历
+        4.根据给定键值搜索树中对应结点
+        5.根据给定结点搜索其对应的前驱后继结点
+        6.搜索树中最大和最小结点
+        7.向搜索树中插入一个给定键值的结点
+        8.从搜索树中删除一个给定键值的结点
+        9.结点替换
 */
-
-template<typename Key_type,typename Value_type>
-struct BST_Node : public Base_Node<Key_type,Value_type>
-{
-    //类型定义
-    typedef BST_Node<Key_type,Value_type>* PNode_type;
-
-    //成员变量
-    PNode_type p,l,r;
-
-    /*
-        构造函数
-        功能：将成员变量key赋值，p l r 指针设置为NULL
-    */
-    BST_Node(Key_type key);
-};
-template<typename Key_type,typename Value_type>
-BST_Node<Key_type,Value_type>::BST_Node(Key_type key)
-{
-    this->key = key;
-    this->l = NULL;
-    this->p = NULL;
-    this->r = NULL;
-}
-
-template<typename Key_type,typename Value_type,typename Node_type = BST_Node<Key_type,Value_type>>
+template<typename Key_type, typename Value_type, typename Node_type = BST_Node<Key_type, Value_type>>
 struct BST
 {
     //类型定义
@@ -42,25 +32,24 @@ struct BST
     unsigned int Node_Number;
     PNode_type T;
 
+    //成员函数
     /*
-        功能：初始化成员变量，根指针为空，搜索树中结点个数为0
-        实现：构造函数
+        函数名称：无
+        类型：构造函数
+        传参：无
+        返回值：无
+        功能：初始化成员变量，其中Node_Number为0，T指向NULL
     */
     BST();
 
     /*
-        功能：返回当前搜索树中结点的个数
+        函数名称：无
+        类型：析构函数
         传参：无
-        返回值：结点的个数
+        返回值：无
+        功能：释放掉整棵树
     */
-    unsigned int Current_Node_Number();
-
-    /*
-        功能：返回当前搜索树中根节点的地址
-        传参：无
-        返回值：结点的地址，如果搜索树为空则返回NULL
-    */
-    PNode_type Root();
+    ~BST();
 
     /*
         功能：二叉搜索树中序遍历
@@ -131,38 +120,38 @@ struct BST
     bool Transplant(PNode_type u,PNode_type v);
 };
 
-template<typename Key_type,typename Value_type,typename Node_type>
-BST<Key_type,Value_type,Node_type>::BST()
+template<typename Key_type, typename Value_type, typename Node_type>
+BST<Key_type, Value_type, Node_type>::BST()
 {
     this->T = NULL;
     this->Node_Number = 0;
-    cout<<"搜索树初始化完成！\n";
+    cout << "二叉搜索树属性初始化完成！\n";
 }
-template<typename Key_type,typename Value_type,typename Node_type>
-void BST<Key_type,Value_type,Node_type>::In_Order_Traversal(PNode_type t)
+
+template<typename Key_type, typename Value_type, typename Node_type>
+BST<Key_type, Value_type, Node_type>::~BST()
+{
+    if(this->T != NULL)
+    {
+        delete this->T;
+    }
+    cout << "二叉搜索树释放完毕！\n";
+}
+
+template<typename Key_type, typename Value_type, typename Node_type>
+void BST<Key_type, Value_type, Node_type>::In_Order_Traversal(PNode_type t)
 {
     while(t)
     {
-        cout<<"左 ";
         In_Order_Traversal(t->l);
-        cout<<t->key<<' ';
-        cout<<"右 ";
+        t->Show_Node();
         In_Order_Traversal(t->r);
         return ;
     }
 }
-template<typename Key_type,typename Value_type,typename Node_type>
-unsigned int BST<Key_type,Value_type,Node_type>::Current_Node_Number()
-{
-    return this->Node_Number;
-}
-template<typename Key_type,typename Value_type,typename Node_type>
-typename BST<Key_type,Value_type,Node_type>::PNode_type BST<Key_type,Value_type,Node_type>::Root()
-{
-    return this->T;
-}
-template<typename Key_type,typename Value_type,typename Node_type>
-typename BST<Key_type,Value_type,Node_type>::PNode_type BST<Key_type,Value_type,Node_type>::Search(PNode_type t,Key_type key)
+
+template<typename Key_type, typename Value_type, typename Node_type>
+typename BST<Key_type, Value_type, Node_type>::PNode_type BST<Key_type, Value_type, Node_type>::Search(PNode_type t, Key_type key)
 {
     if(t == NULL || t->key == key)
     {
@@ -176,8 +165,9 @@ typename BST<Key_type,Value_type,Node_type>::PNode_type BST<Key_type,Value_type,
         return this->Search(t->r,key);
     }
 }
-template<typename Key_type,typename Value_type,typename Node_type>
-typename BST<Key_type,Value_type,Node_type>::PNode_type BST<Key_type,Value_type,Node_type>::Successor(PNode_type x)
+
+template<typename Key_type, typename Value_type, typename Node_type>
+typename BST<Key_type, Value_type, Node_type>::PNode_type BST<Key_type, Value_type, Node_type>::Successor(PNode_type x)
 {
     if(x->r)
     {
@@ -191,8 +181,9 @@ typename BST<Key_type,Value_type,Node_type>::PNode_type BST<Key_type,Value_type,
     }
     return y;
 }
-template<typename Key_type,typename Value_type,typename Node_type>
-typename BST<Key_type,Value_type,Node_type>::PNode_type BST<Key_type,Value_type,Node_type>::Predecessor(PNode_type x)
+
+template<typename Key_type, typename Value_type, typename Node_type>
+typename BST<Key_type, Value_type, Node_type>::PNode_type BST<Key_type, Value_type, Node_type>::Predecessor(PNode_type x)
 {
     if(x->l)
     {
@@ -206,8 +197,9 @@ typename BST<Key_type,Value_type,Node_type>::PNode_type BST<Key_type,Value_type,
     }
     return y;
 }
-template<typename Key_type,typename Value_type,typename Node_type>
-typename BST<Key_type,Value_type,Node_type>::PNode_type BST<Key_type,Value_type,Node_type>::Maximum(PNode_type x)
+
+template<typename Key_type, typename Value_type, typename Node_type>
+typename BST<Key_type, Value_type, Node_type>::PNode_type BST<Key_type, Value_type, Node_type>::Maximum(PNode_type x)
 {
     while(x->r)
     {
@@ -215,8 +207,9 @@ typename BST<Key_type,Value_type,Node_type>::PNode_type BST<Key_type,Value_type,
     }
     return x;
 }
-template<typename Key_type,typename Value_type,typename Node_type>
-typename BST<Key_type,Value_type,Node_type>::PNode_type BST<Key_type,Value_type,Node_type>::Minimum(PNode_type x)
+
+template<typename Key_type, typename Value_type, typename Node_type>
+typename BST<Key_type, Value_type, Node_type>::PNode_type BST<Key_type, Value_type, Node_type>::Minimum(PNode_type x)
 {
     while(x->l)
     {
@@ -224,8 +217,9 @@ typename BST<Key_type,Value_type,Node_type>::PNode_type BST<Key_type,Value_type,
     }
     return x;
 }
-template<typename Key_type,typename Value_type,typename Node_type>
-typename BST<Key_type,Value_type,Node_type>::PNode_type BST<Key_type,Value_type,Node_type>::Insert(Key_type key)
+
+template<typename Key_type, typename Value_type, typename Node_type>
+typename BST<Key_type, Value_type, Node_type>::PNode_type BST<Key_type, Value_type, Node_type>::Insert(Key_type key)
 {
     PNode_type z = new Node_type(key);
     PNode_type x = this->T;
@@ -258,19 +252,25 @@ typename BST<Key_type,Value_type,Node_type>::PNode_type BST<Key_type,Value_type,
     this->Node_Number++;
     return z;
 }
-template<typename Key_type,typename Value_type,typename Node_type>
-bool BST<Key_type,Value_type,Node_type>::Delete(PNode_type z)
+template<typename Key_type, typename Value_type, typename Node_type>
+bool BST<Key_type, Value_type, Node_type>::Delete(PNode_type z)
 {
     if(z != NULL)
     {
         if(z->l == NULL)
         {
             this->Transplant(z,z->r);
+            z->p = NULL;
+            z->l = NULL;
+            z->r = NULL;
             delete z;
         }
         else if(z->r == NULL)
         {
             this->Transplant(z,z->l);
+            z->p = NULL;
+            z->l = NULL;
+            z->r = NULL;
             delete z;
         }
         else 
@@ -286,6 +286,9 @@ bool BST<Key_type,Value_type,Node_type>::Delete(PNode_type z)
             this->Transplant(z,y);
             y->l = z->l;
             y->l->p = y;
+            z->p = NULL;
+            z->l = NULL;
+            z->r = NULL;
             delete z;
         }
         this->Node_Number--;
@@ -293,8 +296,8 @@ bool BST<Key_type,Value_type,Node_type>::Delete(PNode_type z)
     }
     return false;
 }
-template<typename Key_type,typename Value_type,typename Node_type>
-bool BST<Key_type,Value_type,Node_type>::Transplant(PNode_type u,PNode_type v)
+template<typename Key_type, typename Value_type, typename Node_type>
+bool BST<Key_type, Value_type, Node_type>::Transplant(PNode_type u, PNode_type v)
 {
     if(u != NULL)
     {
@@ -305,7 +308,8 @@ bool BST<Key_type,Value_type,Node_type>::Transplant(PNode_type u,PNode_type v)
         else if(u->p->l == u)
         {
             u->p->l = v;
-        }else 
+        }
+        else 
         {
             u->p->r = v;
         }

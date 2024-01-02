@@ -14,13 +14,35 @@ int main(void)
 
     BST<int,int>* mytree = new BST<int,int>;
     double start,end;
-    start = clock();
+    cout<<"进行3次删除和3次插入交替操作\n";
     for(int i = 0;i < n;i++)
     {
-        mytree->Insert(rand()%20000);
+        mytree->Insert(rand()%20000+1);
     }
-    end = clock();
-    cout<<"插入时间为"<<(end - start) / CLK_TCK<<'\n';
+    for(int i = 0;i < (n / 2);i++)
+    {
+        mytree->Delete(mytree->Search(mytree->T,rand()%20000+1));
+    }
+    // //cout<<"红黑树黑高为"<<mytree->RBT_BH(mytree->T)<<'\n';
+
+    for(int i = 0;i < (n / 2);i++)
+    {
+        mytree->Insert(rand()%20000+1);
+    }
+    for(int i = 0;i < (n / 2);i++)
+    {
+        mytree->Delete(mytree->Search(mytree->T,rand()%20000+1));
+    }
+    // //cout<<"红黑树黑高为"<<mytree->RBT_BH(mytree->T)<<'\n';
+
+    for(int i = 0;i < (n / 2);i++)
+    {
+        mytree->Insert(rand()%20000+1);
+    }
+    for(int i = 0;i < (n / 2);i++)
+    {
+        mytree->Delete(mytree->Search(mytree->T,rand()%20000+1));
+    }
     // cout<<"红黑树黑高为"<<mytree->RBT_BH(mytree->T)<<'\n';
     // cout<<"对红黑树进行结点中序遍历如下：";
     // mytree->In_Order_Traversal(mytree->T,1);
@@ -29,7 +51,6 @@ int main(void)
         cout<<"输入搜索规模：";
         cin>>n;
         int success_time = 0,faliure_time = 0;
-        srand(time(NULL));
         start = clock();
         for(int i = 0;i < n;i++)
         {

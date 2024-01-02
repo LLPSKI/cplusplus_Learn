@@ -14,27 +14,27 @@ using namespace std;
 元素的个数远小于元素本身的范围，那么会导致count数组很大，影响时间和空间复杂度；所以存在一定的限制
 */
 template<typename T>
-void counting_sort_less(T*& arr,size_t n,size_t range=RAND_MAX+1)//千万注意：range是个闭区间
+void counting_sort_less(T*& arr,unsigned int n,unsigned int range=RAND_MAX+1)//千万注意：range是个闭区间
 {
-    T* count=new T[range];
+    T* count = new T[range];
     memset(count,0,sizeof(T)*range);//将count数组初始化为0
-    for(int i=0;i<n;i++)
+    for(int i = 0;i < n;i++)
     {
         count[arr[i]]++;//记录元素个数
     }
-    for(int i=1;i<range;i++)
+    for(int i = 1;i < range;i++)
     {
-        count[i]+=count[i-1];//记录小于该元素的格式
+        count[i] += count[i-1];//记录小于该元素的格式
     }
-    T* temp=new T[n];
-    for(int i=n-1;i>=0;i--)
+    T* temp = new T[n];
+    for(int i = n - 1;i >= 0;i--)
     {
-        temp[count[arr[i]]-1]=arr[i];//将对应元素放在相应的位置，-1是数组下标以0开始
+        temp[count[arr[i]]-1] = arr[i];//将对应元素放在相应的位置，-1是数组下标以0开始
         count[arr[i]]--;//支持元素相异
     }
-    for(int i=0;i<n;i++)
+    for(int i = 0;i < n;i++)
     {
-        arr[i]=temp[i];//将数据写回原数组
+        arr[i] = temp[i];//将数据写回原数组
     }
     delete[] temp,count;
 }

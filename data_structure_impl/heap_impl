@@ -1,9 +1,33 @@
 #ifndef HEAP_IMPL
 #define HEAP_IMPL
-template<typename T,typename compare=greater<T>>//默认是大根堆
-struct heap
+#include<functional>
+#include"Base_Node"
+using namespace std;
+
+/*
+    数据结构：基本二叉堆
+    继承：基类
+    成员变量：
+        1.指向根的指针T
+        2.当前堆中的结点的个数
+*/
+template<typename Key_type,typename Value_type,typename Node_type = Base_Node<Key_type,Value_type>,
+         typename Compare = greater<Key_type>>//默认是大根堆
+struct Heap
 {
-    typedef T value_type;
+    //类型定义
+    typedef Value_type* PValue_type;
+    typedef Node_type* PNode_type;
+    typedef Node_type* iterator;
+
+    //成员变量
+    PNode_type T;
+    unsigned int Current_Number;
+
+    //成员函数
+    /*
+        
+    */
 
     static size_t left(size_t i)
     {

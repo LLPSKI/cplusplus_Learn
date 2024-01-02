@@ -1,5 +1,5 @@
 #include<iostream>
-#include"BST_impl"
+#include"../BST_impl"
 using namespace std;
 int main(void)
 {
@@ -13,28 +13,29 @@ int main(void)
     {
         char op;
         int key;
-        cin>>op;
+        cin >> op;
         switch(op)
         {
             case('i'):
-                cin>>key;
+                cin >> key;
                 if(mytree->Insert(key))
                 {
-                    cout<<"插入成功！\n";
+                    cout << "插入成功！\n";
                 }
                 break;
             case('c'):
-                cout<<mytree->Current_Node_Number()<<'\n';
+                cout << mytree->Node_Number << '\n';
                 break;
             case('p'):
-                mytree->In_Order_Traversal(mytree->Root());
-                cout<<'\n';
+                mytree->In_Order_Traversal(mytree->T);
+                cout << '\n';
                 break;
             case('d'):
-                cin>>key;
-                mytree->Delete(mytree->Search(mytree->Root(),key));
+                cin >> key;
+                mytree->Delete(mytree->Search(mytree->T,key));
                 break;
             case('q'):
+                delete mytree;
                 return 0;
         }
     }
