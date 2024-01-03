@@ -1,0 +1,76 @@
+#ifndef RK_IMPL
+#define RK_IMPL
+#include<iostream>
+#include<cstring>
+#include<string>
+#include<fstream>
+using namespace std;
+
+/*
+    函数名称：RK
+    传参：模式P，文本T，模q（素数），基数d（一般为字符集的大小）
+    返回值：无
+    函数功能：模式匹配
+*/
+void RK(string P, string T, int q, int d)
+{
+    fstream f;
+    int m = P.size();
+    int n = T.size();
+    long long int h = 1;
+    long long int p = 0, t = 0;
+    for(int i = 1; i <= m - 1; i++)
+    {
+        h = (h * d);
+        // h %= q;
+    }
+    for(int i = 1; i <= m; i++)
+    {
+        p = (d * p + (long long int)(P[i-1] - 97));
+        t = (d * t + (long long int)(T[i-1] - 97));
+        // p %= q;
+        // t %= q;
+    }
+    for(int s = 0; s < n - m; s++)
+    {
+        if(t == p)
+        {
+            if(P.compare(0,m,T,s,m) == 0)
+            {
+                // f.open("../output/RK/result.txt",ios::out|ios::app);
+                // f << "发现一次成功匹配！" << "此时s = " << s << '\n';
+                // f.close();
+            }
+        }
+        t = ((d * (t - ((h * ((T[s] - 97)))))) + (T[s+m] - 97));
+    }
+}   
+// template<typename Char_type>
+// void RK(Char_type*& P, unsigned int m, Char_type*& T, unsigned int n, int q, int d)
+// {
+//     int h = 1;
+//     for(int i = 0; i < m - 1; i++)
+//     {
+//         h = (h * d) % q;
+//     }
+//     int p = 0,t = 0;
+//     for(int i = 0;i < m;i++)
+//     {
+//         p = (d * p + P[i]) % q;
+//         t = (d * t + T[i]) % q;
+//     }
+//     for(int s = 0;s < n - m;s++)
+//     {
+//         if(t == p)
+//         {
+//             if(memcmp(P,T+s,m) == 0)
+//             {
+//                 cout << "发现一次成功匹配！" << "此时s = " << s << '\n';
+//             }
+//         }
+//         t = ((d * (t - ((h * T[s]) % q))) + T[s+m]) % q;
+//     }
+//     return ;
+// }
+
+#endif

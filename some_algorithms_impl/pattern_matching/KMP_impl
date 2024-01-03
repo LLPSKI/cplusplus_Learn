@@ -1,0 +1,65 @@
+#ifndef KMP_IMPL
+#define KMP_IMPL
+#include<iostream>
+using namespace std;
+
+/*
+    函数名称：Compute_Prefix
+    模板参数：Char_type代表“字符”的类型
+    传参：模式字符串首地址及其长度
+    返回值：PI数组或者next数组
+    功能：计算用于KMP算法的PI数组
+*/
+template<typename Char_type>
+unsigned int* Compute_Prefix(Char_type*& P,unsigned int m)
+{
+    unsigned int* PI = new unsigned int[m+1];
+    PI[1] = 0;
+    int k = 0;
+    for(int q = 2; q <= m; q++)
+    {
+        while(k > 0 && P[k+1] != P[q])
+        {
+            k = PI[k];
+        }
+        if(P[k+1] == P[q])
+        {
+            k++;
+        }
+        PI[q] = k;
+    }
+    return PI;
+}
+
+/*
+    函数名称：KMP
+    模板参数：Char_type代表“字符”的类型
+    传参：文本、模式及其长度
+    返回值：无
+    功能：模式匹配
+*/
+template<typename Char_type>
+void KMP(Char_type*& P, unsigned int m, Char_type*& T, unsigned int n)
+{
+    unsigned int* PI = Compute_Prefix<Char_type>(P,m);
+    int q = 0;
+    for(int i = 0; i <= n; i++)
+    {
+        while(q > 0 && P[q+1] != T[i])
+        {
+            q = PI[q];
+        }
+        if(P[q+1] == T[i])
+        {
+            q++;
+        }
+        if(q == m)
+        {
+            cout << "发现一次成功匹配！" << "此时s = " << i << '\n';
+            q = PI[q];
+        }
+    }
+}
+
+
+#endif

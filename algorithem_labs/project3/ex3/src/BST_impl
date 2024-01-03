@@ -1,0 +1,324 @@
+#ifndef BST_IMPL
+#define BST_IMPL
+#include<iostream>
+#include"BST_Node"
+using namespace std;
+
+/*
+    数据结构：BST二叉搜索树
+    继承：基类
+    成员变量：
+        1.Node_Number记录当前搜索树中结点的个数
+        2.T为指向树的根节点的指针
+    成员函数：
+        1.构造函数
+        2.析构函数
+        3.对树的中序遍历
+        4.根据给定键值搜索树中对应结点
+        5.根据给定结点搜索其对应的前驱后继结点
+        6.搜索树中最大和最小结点
+        7.向搜索树中插入一个给定键值的结点
+        8.从搜索树中删除一个给定键值的结点
+        9.结点替换
+*/
+template<typename Key_type, typename Value_type, typename Node_type = BST_Node<Key_type, Value_type>>
+struct BST
+{
+    //类型定义
+    typedef Node_type* PNode_type;
+    typedef Node_type* iterator;
+
+    //成员变量
+    unsigned int Node_Number;
+    PNode_type T;
+
+    //成员函数
+    /*
+        函数名称：无
+        类型：构造函数
+        传参：无
+        返回值：无
+        功能：初始化成员变量，其中Node_Number为0，T指向NULL
+    */
+    BST();
+
+    /*
+        函数名称：无
+        类型：析构函数
+        传参：无
+        返回值：无
+        功能：释放掉整棵树
+    */
+    ~BST();
+
+    /*
+        功能：二叉搜索树中序遍历
+        实现方式：递归
+        传参：本次递归处理的结点地址
+        返回值：无
+    */
+    void In_Order_Traversal(PNode_type t);
+
+    /*
+        功能：根据所给关键字的值在搜索树中查找匹配的结点
+        实现方式：递归
+        传参：递归实现，从而需要传递本次递归处理的结点地址，以及关键字key的值
+        返回值：如果查找成功，返回指向该结点的地址，反之查找失败返回NULL
+    */
+    PNode_type Search(PNode_type t,Key_type key);
+
+    /*
+        功能：搜索树中特定结点x的后继
+        传参：特定节点x的地址
+        返回值：结点x的后继结点地址
+    */
+    PNode_type Successor(PNode_type x);
+
+    /*
+        功能：搜索树中特定结点x的前驱
+        传参：特定节点x的地址
+        返回值：结点x的前驱结点地址
+    */
+    PNode_type Predecessor(PNode_type x);
+
+    /*
+        功能：返回以x为根的搜索树中的最大值结点
+        传参：结点x的地址
+        返回值：关键字最大的结点的地址
+    */
+    PNode_type Maximum(PNode_type x);
+
+    /*
+        功能：返回以x为根的搜索树中的最小值结点
+        传参：结点x的地址
+        返回值：关键字最小的结点的地址
+    */
+    PNode_type Minimum(PNode_type x);
+
+    /*
+        Insert函数
+        功能：将关键字key先构造为结点z，再将z插入到搜索树中
+        传参：关键字key
+        返回值：结点z的地址
+    */
+    PNode_type Insert(Key_type key);
+
+    /*
+        功能：将结点z从搜索树中删除
+        实现：结点z不能是NULL
+        传参：结点z的地址
+        返回值：删除成功返回true，反之返回false
+    */
+    bool Delete(PNode_type z);
+
+    /*
+        功能：将以结点为v的子树替换结点u的位置，其中u的指针不更改，且不进行释放
+        实现：其中结点v可以是NULL，但结点u不能是NULL
+        传参：结点u和v的地址
+        返回值：替换成功返回true，反之出错返回false
+    */
+    bool Transplant(PNode_type u,PNode_type v);
+};
+
+template<typename Key_type, typename Value_type, typename Node_type>
+BST<Key_type, Value_type, Node_type>::BST()
+{
+    this->T = NULL;
+    this->Node_Number = 0;
+    // cout << "二叉搜索树属性初始化完成！\n";
+}
+
+template<typename Key_type, typename Value_type, typename Node_type>
+BST<Key_type, Value_type, Node_type>::~BST()
+{
+    if(this->T != NULL)
+    {
+        delete this->T;
+    }
+    // cout << "二叉搜索树释放完毕！\n";
+}
+
+template<typename Key_type, typename Value_type, typename Node_type>
+void BST<Key_type, Value_type, Node_type>::In_Order_Traversal(PNode_type t)
+{
+    while(t)
+    {
+        In_Order_Traversal(t->l);
+        // t->Show_Node();
+        In_Order_Traversal(t->r);
+        return ;
+    }
+}
+
+template<typename Key_type, typename Value_type, typename Node_type>
+typename BST<Key_type, Value_type, Node_type>::PNode_type BST<Key_type, Value_type, Node_type>::Search(PNode_type t, Key_type key)
+{
+    if(t == NULL || t->key == key)
+    {
+        return t;
+    }
+    if(t->key > key)
+    {
+        return this->Search(t->l,key);
+    }else 
+    {
+        return this->Search(t->r,key);
+    }
+}
+
+template<typename Key_type, typename Value_type, typename Node_type>
+typename BST<Key_type, Value_type, Node_type>::PNode_type BST<Key_type, Value_type, Node_type>::Successor(PNode_type x)
+{
+    if(x->r)
+    {
+        return this->Minimum(x->r);
+    }
+    PNode_type y = x->p;
+    while(y != NULL && x == y->r)
+    {
+        x = y;
+        y = y->p;
+    }
+    return y;
+}
+
+template<typename Key_type, typename Value_type, typename Node_type>
+typename BST<Key_type, Value_type, Node_type>::PNode_type BST<Key_type, Value_type, Node_type>::Predecessor(PNode_type x)
+{
+    if(x->l)
+    {
+        return this->Maximum(x->l);
+    }
+    PNode_type y = x->p;
+    while(y != NULL && x == y->l)
+    {
+        x = y;
+        y = y->p;
+    }
+    return y;
+}
+
+template<typename Key_type, typename Value_type, typename Node_type>
+typename BST<Key_type, Value_type, Node_type>::PNode_type BST<Key_type, Value_type, Node_type>::Maximum(PNode_type x)
+{
+    while(x->r)
+    {
+        x = x->r;
+    }
+    return x;
+}
+
+template<typename Key_type, typename Value_type, typename Node_type>
+typename BST<Key_type, Value_type, Node_type>::PNode_type BST<Key_type, Value_type, Node_type>::Minimum(PNode_type x)
+{
+    while(x->l)
+    {
+        x = x->l;
+    }
+    return x;
+}
+
+template<typename Key_type, typename Value_type, typename Node_type>
+typename BST<Key_type, Value_type, Node_type>::PNode_type BST<Key_type, Value_type, Node_type>::Insert(Key_type key)
+{
+    PNode_type z = new Node_type(key);
+    PNode_type x = this->T;
+    PNode_type y = NULL;
+    while(x)
+    {
+        y = x;
+        if(z->key < x->key)
+        {
+            x = x->l;
+        }
+        else 
+        {
+            x = x->r;
+        }
+    }
+    z->p = y;
+    if(y == NULL)
+    {
+        this->T = z;
+    }
+    else if(z->key < y->key)
+    {
+        y->l = z;
+    }
+    else
+    {
+        y->r = z;
+    }
+    this->Node_Number++;
+    return z;
+}
+template<typename Key_type, typename Value_type, typename Node_type>
+bool BST<Key_type, Value_type, Node_type>::Delete(PNode_type z)
+{
+    if(z != NULL)
+    {
+        if(z->l == NULL)
+        {
+            this->Transplant(z,z->r);
+            z->p = NULL;
+            z->l = NULL;
+            z->r = NULL;
+            delete z;
+        }
+        else if(z->r == NULL)
+        {
+            this->Transplant(z,z->l);
+            z->p = NULL;
+            z->l = NULL;
+            z->r = NULL;
+            delete z;
+        }
+        else 
+        {
+            //进入此情况下，必然有后继
+            PNode_type y = this->Successor(z);
+            if(y->p != z)
+            {
+                this->Transplant(y,y->r);
+                y->r = z->r;
+                y->r->p = y;
+            }
+            this->Transplant(z,y);
+            y->l = z->l;
+            y->l->p = y;
+            z->p = NULL;
+            z->l = NULL;
+            z->r = NULL;
+            delete z;
+        }
+        this->Node_Number--;
+        return true;
+    }
+    return false;
+}
+template<typename Key_type, typename Value_type, typename Node_type>
+bool BST<Key_type, Value_type, Node_type>::Transplant(PNode_type u, PNode_type v)
+{
+    if(u != NULL)
+    {
+        if(u->p == NULL)
+        {
+            this->T = v;
+        }
+        else if(u->p->l == u)
+        {
+            u->p->l = v;
+        }
+        else 
+        {
+            u->p->r = v;
+        }
+        if(v != NULL)
+        {
+            v->p = u->p;
+        }
+        return true;
+    }
+    return false;
+}
+#endif

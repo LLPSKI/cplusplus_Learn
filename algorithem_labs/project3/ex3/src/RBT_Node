@@ -1,0 +1,97 @@
+#ifndef RBT_NODE
+#define RBT_NODE
+#include<iostream>
+#include"Base_Node"
+using namespace std;
+
+/*
+    数据结构：红黑树结点类
+    继承：Base_Node
+    成员变量：
+        1.键值key（继承）
+        2.指向数据域的指针value（继承）
+        3.自身结点颜色color（新增）
+        4.指向自身类型的指针l,p,r（新增）
+        5.标志位is_nil代表自身是不是叶子结点（新增）
+    实现功能：
+        1.构造函数（修改）
+        2.析构函数（修改）
+        3.展示结点键值信息（继承）
+*/
+enum Color
+{
+    Red,
+    Black
+};
+template<typename Key_type, typename Value_type>
+struct RBT_Node : public Base_Node<Key_type, Value_type>
+{
+    //类型定义
+    typedef RBT_Node* PNode_type;
+    typedef Value_type* PValue_type;
+
+    //成员变量
+    Color color;
+    PNode_type l,r,p;
+    bool is_nil;
+
+    //成员函数
+    /*
+        函数名称：无
+        类型：构造函数
+        传参：无或者键值和指向数据域的指针
+        返回值：无
+        功能1：键值默认设为0，数据域指针指向NULL
+        功能2：键值传进来，数据域指针默认为NULL
+    */
+    RBT_Node();
+    RBT_Node(Key_type key, PValue_type value = NULL);
+
+    /*
+        函数名称：无
+        类型：析构函数
+        传参：无
+        返回值：无
+        功能：调用基类的析构函数后释放掉自身三个指向结点的空间，即整个树释放掉
+    */
+    ~RBT_Node();
+};
+
+template<typename Key_type, typename Value_type>
+RBT_Node<Key_type, Value_type>::RBT_Node()
+{
+    //此处隐含调用默认构造函数
+    this->color = Red;
+    this->is_nil = true;
+    this->l = NULL;
+    this->p = NULL;
+    this->r = NULL;
+    // cout << "红黑属性初始化！\n";
+}
+
+template<typename Key_type, typename Value_type>
+RBT_Node<Key_type, Value_type>::RBT_Node(Key_type key, RBT_Node<Key_type, Value_type>::PValue_type value)
+:Base_Node<Key_type, Value_type>::Base_Node(key, value)//此处需要显式调用构造函数2
+{
+    this->color = Red;
+    this->is_nil = true;
+    this->l = NULL;
+    this->p = NULL;
+    this->r = NULL;
+    // cout << "红黑属性初始化！\n";
+}
+
+template<typename Key_type, typename Value_type>
+RBT_Node<Key_type, Value_type>::~RBT_Node()
+{
+    //此处隐含调用默认析构函数
+    if(this->r != NULL)
+    {
+        delete this->r;
+    }
+    if(this->l != NULL)
+    {
+        delete this->l;
+    }
+}
+#endif

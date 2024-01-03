@@ -1,0 +1,104 @@
+#ifndef BASE_NODE
+#define BASE_NODE
+#include<iostream>
+using namespace std;
+/*
+    数据结构：基础结点类
+    继承：基类
+    成员变量：
+        1.键值key
+        2.指向数据域的指针value
+    实现功能：
+        1.构造函数
+        2.析构函数
+        3.展示结点键值信息
+*/
+template<typename Key_type,typename Value_type>
+struct Base_Node
+{
+    //类型定义
+    typedef Value_type* PValue_type;
+
+    //成员变量
+    Key_type key;
+    PValue_type value;
+
+    //成员函数
+    /*
+        函数名称：无
+        类型：构造函数
+        传参：无或者键值和指向数据域的指针
+        返回值：无
+        功能1：键值默认设为0，数据域指针指向NULL
+        功能2：键值传进来，数据域指针默认为NULL
+    */
+    Base_Node();
+    Base_Node(Key_type key,PValue_type value = NULL);
+
+    
+    /*
+        函数名称：无
+        类型：析构函数
+        传参：无
+        返回值：无
+        功能：将自身结点指向的数据域占用的空间释放掉
+    */
+    ~Base_Node();
+
+    /*
+        函数名称：Show_Node
+        类型：成员函数
+        传参：无
+        返回值：无
+        功能：向控制台输出结点结构类型信息
+    */
+    void Show_Node();
+};
+
+template<typename Key_type,typename Value_type>
+Base_Node<Key_type,Value_type>::Base_Node()
+{
+    this->key = 0;
+    this->value = NULL;
+    // cout << "结点";
+    // this->Show_Node();
+    // cout << "创建！\n";
+}
+
+template<typename Key_type,typename Value_type>
+Base_Node<Key_type,Value_type>::Base_Node(Key_type key,PValue_type value)
+{
+    this->key = key;
+    this->value = value;
+    // cout << "结点";
+    // this->Show_Node();
+    // cout << "创建！\n";
+}
+
+template<typename Key_type,typename Value_type>
+Base_Node<Key_type,Value_type>::~Base_Node()
+{
+    // cout << "结点";
+    // this->Show_Node();
+    if(this->value != NULL)
+    {
+        delete this->value;
+    }
+    // cout << "析构！\n";
+}
+
+
+template<typename Key_type,typename Value_type>
+void Base_Node<Key_type,Value_type>::Show_Node()
+{
+    cout << "(" << this->key << ",";
+    if(this->value == NULL)
+    {
+        cout << "NULL)";
+    }
+    else
+    {
+        cout << this->value << ')';
+    }
+}
+#endif
